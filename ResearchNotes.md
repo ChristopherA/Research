@@ -154,7 +154,8 @@ Questions:
 
 * Work on some UX & I&R issues for this as part of Joe's engagement model work.
 * The progress since #RWOT9 on social key recovery has been slow
-    * The existing SSS library should not do randomness. The overall architecture should support deterministic random source (such dice) to validate multiple implementations against each other. Randomness is offered to the shamir library by the calling code.
+    * The existing SSS library should not provide entropy.  Entropy should be provided
+      by the caller using a quality external source (such as dice).
     * We need to refactor the existing SSS library to support a simplified binary library.
     * So far this has been volunteers only, HTC hasn't funded (yet.)
     * Some want to move to Rust or a more secure language.
