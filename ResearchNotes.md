@@ -1,7 +1,7 @@
 Blockchain Commons Research
 ===========================
 
-Some notes on upcoming blockchain and cryptographic research from Blockchain Commons supported by our Patrons. In reverse chronological order by Cycle.
+Some notes on upcoming and current blockchain and cryptographic research from Blockchain Commons supported by our Patrons. In reverse chronological order by Cycle.
   
 ## Cycle 2 (December January)
 
@@ -234,8 +234,8 @@ Support Tor infrastructure such as funding exit nodes, better tools for Tor, etc
 ### BIP-Schnorr & musig
 
 Track current efforts for standardizing BIP-Schnorr and musig developer in preparation for use in future Blockchain Commons projecs.
-    * Finished: x-only BIP-Schnorr seems to be final. Best implmentation is Peter Wuille's secp256k1 libary. Repo with current PR is at https://github.com/BlockchainCommons/secp256k1-schnorrsig
-    * Next steps: create some test CLI tools for signing, multisig, and longer-term also diffie-helman peering and encryption; investigate adapting did:git to use Schnorr.
+* Finished: x-only BIP-Schnorr seems to be final. Best implmentation is Peter Wuille's secp256k1 libary. Repo with current PR is at https://github.com/BlockchainCommons/secp256k1-schnorrsig
+* Next steps: create some test CLI tools for signing, multisig, and longer-term also diffie-helman peering and encryption; investigate adapting did:git to use Schnorr.
 
 ## Currently Inactive or On-Hiatus Research
 
@@ -248,11 +248,11 @@ This online course to teach users how to learn Bitcoin by leveraging Bitcoin-Cor
 #### Standards for Air-gapped signing and cold storage using QR
 
 A number of air-gapped devices have demonstrated this is possible, but there is no cross-wallet compatibility. Can we abstract out a better solution as an industry standard?
-    * Finished: Implemented POC in iOS bitcoin reference wallet against a Mac java-based desktop wallet; first pass at QR codes at https://github.com/BlockchainCommons/AirgappedSigning, some lessons learned (for instance, start at network wallet)
-    * Next Steps: The QR codes in the POC can be quite big, investigate alternatives (compression, sequential framing; streaming, etc.); Investigate further Unchained Capital's Hermet; get funding for more work on this project from companies that want air-gapped custodial projects; architect a propsal for HTC Exodus as a substitute for a Trezor;
+* Finished: Implemented POC in iOS bitcoin reference wallet against a Mac java-based desktop wallet; first pass at QR codes at https://github.com/BlockchainCommons/AirgappedSigning, some lessons learned (for instance, start at network wallet)
+* Next Steps: The QR codes in the POC can be quite big, investigate alternatives (compression, sequential framing; streaming, etc.); Investigate further Unchained Capital's Hermet; get funding for more work on this project from companies that want air-gapped custodial projects; architect a propsal for HTC Exodus as a substitute for a Trezor;
     
 #### SecQ
 
 There is an opportunity to leverage a “mirror” elliptic curve to the secp256k1 curve, that we are calling SecQ, to allow for an entirely new class of bulletproofs that can offer zero-knowledge cryptographic arithmetic circuit proofs about points on a elliptic curve, thus about signatures and keys. These offer powerful new opportunities for zero-knowledge proof protocols.
-    * Finished: Description of project is at https://github.com/BlockchainCommons/secp256k1-schnorrsig/issues/1#issuecomment-410482607 ; proposals were sent to Ethereum Foundation and Z-Cash Foundation but we were not funded
-    * Next Steps: There is validation of our approach because of Halo https://github.com/BlockchainCommons/secp256k1-schnorrsig/issues/1#issuecomment-530127487 — we should redo proposals and send again.
+* Finished: Description of project is at https://github.com/BlockchainCommons/secp256k1-schnorrsig/issues/1#issuecomment-410482607 ; proposals were sent to Ethereum Foundation and Z-Cash Foundation but we were not funded
+* Next Steps: There is validation of our approach because of Halo https://github.com/BlockchainCommons/secp256k1-schnorrsig/issues/1#issuecomment-530127487 — we should redo proposals and send again.
