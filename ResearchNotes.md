@@ -13,6 +13,22 @@ Questions:
 
 * How do we keep things moving forward — simultaneiously signaling there is good work going on here and to join us, while also not building too many barriers of entry for others to join us.
 
+### Neutrino & Blockchain Access for Mobile Clients
+
+Several of our patrons desire to have better privacy-preserving and non-correllatable access to bitcoin blockchain data from mobile clients.
+
+There are two different, related initiatives here. 
+
+The first is support for Neutrino, a proposed protocol that replaces SPV bloom filters for access to blockchain data. A problem has been slow support of it in bitcoin implementations to-date. One research project is to take the latest libbitcoin implementation (or PR if it is not merged) and see how functional it is, and to define a test bed for it. If it is functional, create a Swift library shim for it to integrate it into the reference iOS wallet.
+
+The second initiative is to have two-way secure and non-correlatable access to full-node blockchain data from the remove device. An example of this might be a wallet-less full-node hosted on a VPS controlled via v3onion/ssh connection to a mobile client that holds the keys. On iOS and most Android devices these keys would be help in the moble devices secure enclave, but on Exodus they could be secured in the Trustzone. Alternatively, the mobile client could talk securely to a full-node at someone's home where the keys are held by bitcoind remotely and the remote has no keys. An example proof of concept of this is Bitcoin-Standup on the Mac and Fully-Noded on iOS.
+
+Questions: 
+* Does libbitcoin's Neutrino support work? Does it work in the wild with limited support of Neutrino by full node servers? If we have to setup full nodes to reliably support Neutrino clients anyhow, it could be that v3tor/ssh architecture to a full-node may be better in the short run. We don't know.
+* We have already demonstrated that we can do transactions using just the publically available Blockstream.info server, however, there were some issues with using it .onion. We've also demonstrated feasibility to do v3tor/ssh and RPC to a bitcoind. And assuming the libbitcoin Neutrino support works, we will be able establish transactions using that. Is there some way abstract API for all three (or 4 if we include variants on where the keys are stored) so that users can choose?
+* Longer term we may want to add esplora (Blockstream.info block explorer) as an API on top of bitcoind instead of talking to it via RPC. This could be installed as an option by Bitcoin Standup. This would also allow to extend the API to support tip-finding APIs needed by BTCR remote clients, as bitcoind by default does not index UTXOs.
+* There may be some utility in having a Bitcoin Standup option to install a libbitcoin server instead of bitcoind, as it may support both Neutrino and indexing UTXOs needed by BTCR.
+
 ### Payment Channels
 
 Current L1 public blockchain that support multiple fungible digital assets (colored coins like Omni, small POW blockchain's like Bitmark, etc.) are unlikely to scale much beyond the initial POC/Intermediate (5-7 TPS) level. There are some existing solutions to this, for instance, Blockstream's Liquid supports multiple assets uses a private-PBFT as its L2 consensus layer, and Ethereum is exploring sharding as a L1 solution.
@@ -120,6 +136,10 @@ Project:
 ### Social Discovery
 
 How can we do social discovery and preserve privacy? Maybe some zk methods?
+
+### Smart Signatures
+
+Related to the Schnorr work, should we implement some type of simple predicate smart signature language sooner than later?
 
 ### Other questions
 
