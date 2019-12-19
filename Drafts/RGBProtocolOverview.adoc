@@ -20,6 +20,32 @@ The RGB Project uses a layered architecture with the OpenSeals Framework <<RGBSe
 
 The project seems very young and it is unclear when the documentation will be complete or the implementation will be ready for production use. While it is certainly possible a developer could build their own implementation using the existing design and code as a starting point, but would be missing out on any interoperability and adoption benefits that might result from a thriving RGB Protocol ecosystem.
 
+== LNP/BP Protocol Suite Reference Model
+
+One of the key concepts of the *LNP/BP Specifications* project is that there is a family or _suite_ of protocols that can be combined in different ways for different applications. This concept was popularized in computer networking by the OSI Reference Model <<WikiOsiModel>> and the Internet protocol suite (also referred to as the TCP/IP suite) <<WikiIpSuite>>. A particular implementation of a protocol suite is usually called a protocol _stack_ <<WikiStack>>.
+
+The LNP/BP Reference model looks like this:
+
+// This currently doesn't render using gradle asciidoctorPdf
+// See: https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/450
+[ditaa, format="png", id="LNP/BP Reference Model", scale=3, separation=false, shadows=false]
+....
+
++--------------------+
+| Application        |
++--------------------+
+| Off chain metadata |
++--------------------+
+| Off chain data     |
++--------------------+
+| Transaction graph  |
++--------------------+
+| Transaction        |
++--------------------+
+
+....
+
+
 
 == OpenSeals
 
@@ -41,6 +67,8 @@ Spectrum is the name for RGB Protocol on top of payment channels. It is a slight
 
 [bibliography]
 == References
+
+- [[[WikiStack]]] https://en.wikipedia.org/wiki/Protocol_stack
 
 - [[[LNPBPSpecs]]] https://github.com/LNP-BP/lnpbps#lnpbp-specifications[LNP/BP Specifications Github]
 
