@@ -1,0 +1,124 @@
+= RGB Protocol Overview
+Sean Gilligan
+v0.0.2, December 12, 2019
+:numbered:
+:toc:
+:toclevels: 3
+
+== Scope
+
+This is a work-in-progress report providing an overview of the RGB / Spectrum Protocol stack. There are two major caveats about this draft:
+
+. It has not been reviewed yet.
+. There have been recent, major changes to the RGB Protocol that are just beginning to be documented and this draft of the summary is still largely based on the previous version.
+
+== Overview
+
+The RGB Protocol is an ambitious effort that uses a unique protocol for creating and exchanging digital assets on the Bitcoin blockchain. The RGB Protocol is a layer in a protocol suite (called the LNP/BP suite) that is based upon Bitcoin, Lightning Network and a handful of supporting layers. The work-in-progress specifications are available on Github <<LNPBPSpecs>>. A previous version (now obsolete) of the protocol specifications is available in a separate Github repository <<RGBProto>>. It is based upon the idea of single-use seals <<RGBSeals>>. In addition to having better privacy characteristics than traditional colored coins, Omni or Counterparty, it has Lightning Network support designed in from the beginning <<RGBLightning>>.
+
+
+== LNP/BP Protocol Suite Reference Model
+
+One of the key concepts of the *LNP/BP Specifications* project is that there is a family or _suite_ of protocols that can be combined in different ways for different applications. This concept was popularized in computer networking by the OSI Reference Model <<WikiOsiModel>> and the Internet protocol suite (also referred to as the TCP/IP suite) <<WikiIpSuite>>. A particular implementation of a protocol suite is usually called a protocol _stack_ <<WikiStack>>.
+
+The LNP/BP Reference model looks like this:
+
+// This currently doesn't render using gradle asciidoctorPdf
+// See: https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/450
+[ditaa, format="png", id="LNP/BP Reference Model", scale=3, separation=false, shadows=false]
+....
+
++--------------------+
+| Application        |
++--------------------+
+| Off chain metadata |
++--------------------+
+| Off chain data     |
++--------------------+
+| Transaction graph  |
++--------------------+
+| Transaction        |
++--------------------+
+
+....
+
+
+== LNP/BP Specifications
+
+
+
+=== LNPBP-1 - Key Tweaking
+
+The full title of this specification is _Key tweaking: collision-resistant elliptic curve-based commitments_. This specification defines the elliptic curve math to embed a commitment in an elliptic curve public key. LNPBP-1 leaves the details of how and where the public key is embedded in a Bitcoin transaction and even the behavior/usage of single-use seals to other specifications.
+
+Given a protocol message `msg` and a public key `P`, there is a _commitment procedure_ that produces a new public key `T`. Funds can be sent to a transaction output that requires the key `T` for spending (see LNPBP-2 and LNPBP-3 for details) and to an external blockchain observer there will be no indication that a commitment is embedded in this transaction.
+
+[source]
+----
+Message msg   // Message we are commiting to
+PublicKey P   // Original Elliptic curve public key
+PublicKey T = commitment_procedure(msg, P)
+----
+
+Another participant in a higher-level application, such as the *RGB* protocol will presumably have access to the original ("untweaked") public key `P` and the message `msg`. By verifying the calculation of `T` with the _reveal procedure_ and the inputs `P` and `msg` the commitment can be verified. When this is combined with a _single-use seal_ the application can verify that the state represented by `msg` is the current state (if the seal is _open_) or was the current state at some time in the past (if the seal is _closed_.)
+
+[source]
+----
+Message msg   // Message we are commiting to
+PublicKey P   // Elliptic curve public key
+PublicKey T   // Tweaked Elliptic curve public key committing to msg
+boolean verified = verify_procedure(msg, P, T)
+----
+
+
+=== LNPBP-2 - Embedding commitments in transaction outputs
+
+=== LNPBP-3 - Determining which Tx output contains the commitment
+
+=== LNPBP-4 - Multi-message commitment with zero knowledge
+
+== OpenSeals
+
+The fundamental idea behind single-use seals and the OpenSeals Framework implementation is to create a usable abstraction around the Bitcoin feature of protection from double-spends. The fundamental breakthrough presented in the Bitcoin whitepaper is double-spend protection without a centralized database to track account balances (coin ownership). Cryptography can create and verify digital signatures, but cryptography alone cannot tell us whether a user has signed two transactions spending the same funds. Bitcoin solved this problem with block rewards for proof-of-work.
+
+A single-use seal is a generalized abstraction of double-spend-protection that allows a party or parties to sign a message that updates a shared state to a new shared state in an exclusive manner. The signature combined with the single-use seal guarantees that thew new state is the only valid _current_ state. The underlying Bitcoin blockchain is not used for consensus -- only for ensuring that there is only one valid shared state at any point in time. The shared state itself is not stored on the Bitcoin blockchain, but is stored and managed by the higher layers.
+
+Whenever a party (could be parties via multisig -- or in the future Schnorr) wants to update state it spends a designated UTXO and hides the hash of the updated shared state in the transaction. The hash is secretly embedded in the transaction using what is known as the key-tweaking procedure (which relies on properties of Elliptic Curve mathematics.) An implementing client (wallet) may use small amounts of Bitcoin to create and spend UTXOs to update state, or ideally can combine state updates with the management of larger UTXOs as part of its usage of standard Bitcoin for even greater privacy.
+
+The OpenSeals Framework provides message (called "proofs") formats that can be used for state management for various higher-level applications. The RGB Protocol is the initial focus, but other protocols could be developed.
+
+== RGB Protocol
+
+The RGB Protocol is an OpenSeals state-management protocol that implements a multi-asset ledger on top of Bitcoin in the tradition of colored coins, but using a significantly new approach. The RGB Protocol can be implemented directly on Bitcoin or using Lightning-style payment channels. The direct-on-Bitcoin approach could be used without payment channels at all, but presumably would be used mostly for payment channel establishment and closing.
+
+== Spectrum
+
+Spectrum is the name for RGB Protocol on top of payment channels. It is a slight extension to the Lightning protocol that is partly interoperable with lightning.
+
+
+== Conclusion
+
+The RGB Project uses a layered architecture with the OpenSeals Framework <<RGBSeals>> at its core. The layered architecture offers significant flexibility to developers looking to build protocols and applications on the Bitcoin blockchain. The layered approach offers design choices and tradeoffs at each layer. At one extreme there is the possibility to implement a complete, proprietary system using the lowest layer: OpenSeals. However, the more compatibility and interoperability an application achieves with the higher layers the greater opportunities for integration with the _possible_ future ecosystem.
+
+The project seems very young and the documentation is still incomplete and it's not yet clear when the implementation will be ready for production use. While it is certainly possible a developer could build their own implementation using the existing design and code as a starting point, such an implementation would be missing out on any interoperability and adoption benefits that might result from a thriving RGB Protocol ecosystem.
+
+
+[bibliography]
+== References
+
+- [[[WikiStack]]] https://en.wikipedia.org/wiki/Protocol_stack
+
+- [[[LNPBPSpecs]]] https://github.com/LNP-BP/lnpbps#lnpbp-specifications[LNP/BP Specifications Github]
+
+- [[[RGBProto]]] https://github.com/rgb-org/spec[RGB Protocol Github]
+
+- [[[RGBSeals]]] https://github.com/rgb-org/spec/blob/develop/01-OpenSeals.md[Open Seals Framework]
+
+- [[[RGBLightning]]] https://github.com/rgb-org/spec/blob/develop/02-LightningNetwork.md[OpenSeals over Lightning Network]
+
+- [[[PeterToddVideo1]]] https://www.youtube.com/watch?v=1U-1xkhJeEo[Building on Bitcoin - Single Use Seals]
+
+- [[[ZuccoVideo1]]] https://www.youtube.com/watch?v=xHWxtmgQP94[Building on Bitcoin - Assets on Bitcoin]
+
+- [[[ZuccoVideo2]]] https://www.youtube.com/watch?v=z8zJ1ATHulg[Giacomo Zucco Explains RGB Tokens on Bitcoin]
+

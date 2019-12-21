@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id 'org.asciidoctor.jvm.convert' version '2.4.0'
+    id 'org.asciidoctor.jvm.pdf' version '2.4.0'
+}
+
+repositories {
+    jcenter()
+}
+
+asciidoctorj {
+    modules {
+        diagram.version '1.5.18'
+    }
+}
+
+def asciiDocDir = "$rootProject.projectDir/Drafts"
+def buildDocDir = file('build/doc')
+
+asciidoctor {
+  sourceDir asciiDocDir
+  outputDir  "${buildDocDir}/html"
+}
+
+asciidoctorPdf {
+  //useIntermediateWorkDir()
+  sourceDir asciiDocDir
+  outputDir  "${buildDocDir}/pdf"
+}
+
+task renderAll(dependsOn: [asciidoctor, asciidoctorPdf])
