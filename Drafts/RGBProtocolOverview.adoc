@@ -14,11 +14,8 @@ This is a work-in-progress report providing an overview of the RGB / Spectrum Pr
 
 == Overview
 
-The RGB Protocol is an ambitious effort that uses a unique protocol for creating and exchanging digital assets on the Bitcoin blockchain. The RGB Protocol is a layer in a protocol stack (called the LNP/BP stack) that is based upon Bitcoin, Lightning Network and a handful of supporting layers. The work-in-progress specifications are available on Github <<LNPBPSpecs>>. A previous version (now obsolete) of the protocol specifications is available in a separate Github repository <<RGBProto>>. It is based upon the idea of single-use seals <<RGBSeals>>. In addition to having better privacy characteristics than traditional colored coins, Omni or Counterparty, it has Lightning Network support designed in from the beginning <<RGBLightning>>.
+The RGB Protocol is an ambitious effort that uses a unique protocol for creating and exchanging digital assets on the Bitcoin blockchain. The RGB Protocol is a layer in a protocol suite (called the LNP/BP suite) that is based upon Bitcoin, Lightning Network and a handful of supporting layers. The work-in-progress specifications are available on Github <<LNPBPSpecs>>. A previous version (now obsolete) of the protocol specifications is available in a separate Github repository <<RGBProto>>. It is based upon the idea of single-use seals <<RGBSeals>>. In addition to having better privacy characteristics than traditional colored coins, Omni or Counterparty, it has Lightning Network support designed in from the beginning <<RGBLightning>>.
 
-The RGB Project uses a layered architecture with the OpenSeals Framework <<RGBSeals>> at its core. The layered architecture offers significant flexibility to developers with design choices and tradeoffs at each layer. At one extreme there is the possibility to implement a complete, proprietary system using the lowest layer: OpenSeals. However, the more compatibility and interoperability an application achieves with the higher layers the greater opportunities for integration with the _possible_ future ecosystem.
-
-The project seems very young and it is unclear when the documentation will be complete or the implementation will be ready for production use. While it is certainly possible a developer could build their own implementation using the existing design and code as a starting point, but would be missing out on any interoperability and adoption benefits that might result from a thriving RGB Protocol ecosystem.
 
 == LNP/BP Protocol Suite Reference Model
 
@@ -46,6 +43,39 @@ The LNP/BP Reference model looks like this:
 ....
 
 
+== LNP/BP Specifications
+
+
+
+=== LNPBP-1 - Key Tweaking
+
+The full title of this specification is _Key tweaking: collision-resistant elliptic curve-based commitments_. This specification defines the elliptic curve math to embed a commitment in an elliptic curve public key. LNPBP-1 leaves the details of how and where the public key is embedded in a Bitcoin transaction and even the behavior/usage of single-use seals to other specifications.
+
+Given a protocol message `msg` and a public key `P`, there is a _commitment procedure_ that produces a new public key `T`. Funds can be sent to a transaction output that requires the key `T` for spending (see LNPBP-2 and LNPBP-3 for details) and to an external blockchain observer there will be no indication that a commitment is embedded in this transaction.
+
+[source]
+----
+Message msg   // Message we are commiting to
+PublicKey P   // Original Elliptic curve public key
+PublicKey T = commitment_procedure(msg, P)
+----
+
+Another participant in a higher-level application, such as the *RGB* protocol will presumably have access to the original ("untweaked") public key `P` and the message `msg`. By verifying the calculation of `T` with the _reveal procedure_ and the inputs `P` and `msg` the commitment can be verified. When this is combined with a _single-use seal_ the application can verify that the state represented by `msg` is the current state (if the seal is _open_) or was the current state at some time in the past (if the seal is _closed_.)
+
+[source]
+----
+Message msg   // Message we are commiting to
+PublicKey P   // Elliptic curve public key
+PublicKey T   // Tweaked Elliptic curve public key committing to msg
+boolean verified = verify_procedure(msg, P, T)
+----
+
+
+=== LNPBP-2 - Embedding commitments in transaction outputs
+
+=== LNPBP-3 - Determining which Tx output contains the commitment
+
+=== LNPBP-4 - Multi-message commitment with zero knowledge
 
 == OpenSeals
 
@@ -64,6 +94,14 @@ The RGB Protocol is an OpenSeals state-management protocol that implements a mul
 == Spectrum
 
 Spectrum is the name for RGB Protocol on top of payment channels. It is a slight extension to the Lightning protocol that is partly interoperable with lightning.
+
+
+== Conclusion
+
+The RGB Project uses a layered architecture with the OpenSeals Framework <<RGBSeals>> at its core. The layered architecture offers significant flexibility to developers looking to build protocols and applications on the Bitcoin blockchain. The layered approach offers design choices and tradeoffs at each layer. At one extreme there is the possibility to implement a complete, proprietary system using the lowest layer: OpenSeals. However, the more compatibility and interoperability an application achieves with the higher layers the greater opportunities for integration with the _possible_ future ecosystem.
+
+The project seems very young and the documentation is still incomplete and it's not yet clear when the implementation will be ready for production use. While it is certainly possible a developer could build their own implementation using the existing design and code as a starting point, such an implementation would be missing out on any interoperability and adoption benefits that might result from a thriving RGB Protocol ecosystem.
+
 
 [bibliography]
 == References
